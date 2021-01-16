@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>涛のVuePlayer</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="Shortcut Icon" href="../images/penguin.ico">
+    <link rel="Bookmark" href="../images/penguin.ico">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #app{
+            margin: 0 auto;
+        }
+        html{
+            height: 100%;
+            background-color: rgba(43,43,43,1);
+        }
+        body{
+            height: 100%;
+            min-height: 300px;
+        }
+        .add_btn{
+            width: 100%;
+            margin-top: 20px;
+        }
+        #app{
+            height: 100%;
+
+        }
+        .body{
+            height: 90%;
+            width: 80%;
+            min-width: 1200px;
+            margin:0 auto;
+
+        }
+        .lrc_body{
+            height: 90%;
+            width: 80%;
+            min-width: 1200px;
+            margin:0 auto;
+        }
+        .head{
+            height: 10%;
+            width: 80%;
+            min-width: 1200px;
+            margin:0 auto;
+            min-height: 96px;
+            background: rgba(34,34,37,1);
+        }
+        .el-date-editor.el-input{
+            width: 200px;
+        }
+        .cell{
+            text-align: center;
+        }
+
+        .el-table--striped .el-table__body tr.el-table__row--striped td{
+            background-color: rgba(46,46,46,1);
+        }
+        .el-table th, .el-table tr{
+            background-color: rgba(43,43,43,1);
+            color: rgba(211,211,211,1);
+        }
+        .el-table td, .el-table th.is-leaf{
+            border-bottom: none;
+        }
+        .el-table--enable-row-hover .el-table__body tr:hover>td{
+            background-color: rgba(55,55,55,1);
+        }
+        .el-table .stripe{
+            background-color: rgba(46,46,46,1);
+        }
+        .el-table .active{
+            background-color: rgba(64,64,64,1);
+        }
+
+        .el-table--border::after, .el-table--group::after, .el-table::before{
+            background: none;
+        }
+
+        .el-row{
+            height: 100%;
+        }
+        ::-webkit-scrollbar {/*滚动条整体样式*/
+            width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
+            height: 4px;
+        }
+        ::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+            border-radius: 5px;
+            -webkit-box-shadow: inset 0 0 5px rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.4 );
+        }
+        ::-webkit-scrollbar-track {/*滚动条里面轨道*/
+            -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0);
+            background-color: rgba(43,43,43,1);
+        }
+
+        .album_img{
+            float: left;
+            margin: 10px;
+        }
+        .song_name_author_div{
+            float: left;
+            height: 80%;
+            margin: 10px 0px;
+        }
+        .song_name_author{
+            font-size: 20px;
+            color: aliceblue;
+            overflow: hidden;
+            white-space:nowrap;
+            text-overflow: ellipsis;
+            width: 240px
+        }
+        .song_author{
+            font-size: 15px;
+            margin-top: 30px;
+        }
+
+
+        #progress_bar{
+            cursor: pointer;
+            background: -webkit-linear-gradient(#F56C6C, #F56C6C) no-repeat, #ddd;
+            background-size: 0% 100%;/*设置左右宽度比例*/
+            margin-top: 20px;
+            -webkit-appearance: none; /*去除原有样式*/
+            width: 80%;
+            border-radius: 2px; /*这个属性设置使填充进度条时的图形为圆角*/
+
+            float: left;
+            display: block;
+        }
+        #progress_bar::-webkit-slider-thumb {
+            -webkit-appearance: none;/*去除滑块原有样式*/
+        }
+        #progress_bar::-webkit-slider-runnable-track {
+            height: 4px;
+
+            border-radius: 2px; /*将轨道设为圆角的*/
+            /*box-shadow: 0 1px 1px #def3f8, inset 0 .125em .125em #0d1112; !*轨道内置阴影效果*!*/
+        }
+        #progress_bar:focus {
+            outline: none;
+        }
+        #progress_bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px;
+            width: 12px;
+            margin-top: -4px; /*使滑块超出轨道部分的偏移量相等*/
+            background: #F56C6C;
+            border-radius: 50%; /*外观设置为圆形*/
+            border: solid 0.125em #F56C6C; /*设置边框*/
+            box-shadow: 0 .125em .125em #3b4547; /*添加底部阴影*/
+        }
+
+
+        #volume_bar{
+            cursor: pointer;
+            background: -webkit-linear-gradient(#F56C6C, #F56C6C) no-repeat, #ddd;
+            background-size: 30% 100%;/*设置左右宽度比例*/
+
+            -webkit-appearance: none; /*去除原有样式*/
+            width: 50%;
+            border-radius: 2px; /*这个属性设置使填充进度条时的图形为圆角*/
+
+            float: left;
+            display: block;
+        }
+        #volume_bar::-webkit-slider-thumb {
+            -webkit-appearance: none;/*去除滑块原有样式*/
+        }
+        #volume_bar::-webkit-slider-runnable-track {
+            height: 4px;
+
+            border-radius: 2px; /*将轨道设为圆角的*/
+            /*box-shadow: 0 1px 1px #def3f8, inset 0 .125em .125em #0d1112; !*轨道内置阴影效果*!*/
+        }
+        #volume_bar:focus {
+            outline: none;
+        }
+        #volume_bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px;
+            width: 12px;
+            margin-top: -4px; /*使滑块超出轨道部分的偏移量相等*/
+            background: #F56C6C;
+            border-radius: 50%; /*外观设置为圆形*/
+            border: solid 0.125em #F56C6C; /*设置边框*/
+            box-shadow: 0 .125em .125em #3b4547; /*添加底部阴影*/
+        }
+
+
+
+
+
+
+        .control_btn{
+            margin-top: 10px;
+            font-size: 20px;
+        }
+        .control_btn.el-button.is-circle {
+            padding: 9px;
+        }
+        .right_btn{
+            font-size: 20px;
+        }
+        .music_time{
+            display: block;
+            float: left;
+            width: 10%;
+            font-size: 10px;
+            color: aliceblue;
+            margin-top: 13px;
+        }
+        .progress_bar_div{
+            height: 20px;
+        }
+        .control_i{
+            color: aliceblue;
+        }
+        #volume_div{
+            float: right;
+            height: 100%;
+            width: 200px;
+            display: flex;
+            align-items:center;
+        }
+
+    </style>
+</head>
+<body>
+<div id="app">
+    <audio :src="audio_url"
+           ref="audio"
+           @ended="play_end"
+           volume="0.3"
+           preload="auto"
+
+           @timeupdate="play_ontimeupdate"
+    ></audio>
+    <div class="lrc_body" v-show="!body_sign">
+
+    </div>
+    <div class="body" v-show="body_sign" v-cloak>
+        <el-table :data="tableData" height="100%"
+                  style="width: 100%"
+                  @row-dblclick="double_click_play"
+                  :row-class-name="tableRowClassName"
+                  :row-style="SelectedStyle"
+                  v-cloak
+        >
+
+            <el-table-column prop="index" label="序号"  width="100" type="index" >
+                <!--                    <template slot-scope="scope">{{scope.$index+1}}</template>-->
+            </el-table-column>
+            <!--                <el-table-column prop="id" label="数据库编号" width="150"></el-table-column>-->
+            <el-table-column prop="name" label="歌名"  sortable></el-table-column>
+            <el-table-column :formatter="author_formatter" label="歌手"  sortable ></el-table-column>
+            <el-table-column prop="al.name" label="专辑"  sortable ></el-table-column>
+            <el-table-column :formatter="duration_formatter" label="时长" width="100" sortable ></el-table-column>
+            <el-table-column label="操作" width="200">
+                <template slot-scope="scope">
+                    <el-button @click="click_play(scope.row,scope.$index)" title="播放" type="danger" icon="el-icon-video-play" circle></el-button>
+                    <el-button @click="" type="danger" icon="el-icon-more" circle></el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+
+    <div class="head" >
+        <el-row :gutter="20" type="flex" justify="center">
+            <el-col :span="7"  >
+                <img @click="body_sign=!body_sign" class="album_img" :src="img_url" height="75" alt="">
+                <div class="song_name_author_div">
+                    <p class="song_name_author song_name " :title="this.tableData[this.current_index].name">{{this.tableData[this.current_index].name}}</p>
+                    <p class="song_name_author song_author" :title="get_song_author" v-text="get_song_author"></p>
+                </div>
+
+            </el-col>
+            <el-col :span="10" type="flex" justify="center" align="middle">
+                <el-button type="text" @click="play_pre" circle>
+                    <i  class="control_btn  control_i el-icon-caret-left" title="播放" ></i>
+                </el-button>
+                <!--                <i @click="play_pre"  class="control_btn  control_i el-icon-caret-left" title="播放" ></i>-->
+                <!--   {active:index===current_index}   -->
+                <el-button @click="play_pause" class="control_btn" title="播放" type="danger" :icon="mid_icon" circle></el-button>
+
+                <!--                <i @click="play_next"  class="control_btn control_i el-icon-caret-right" title="播放" ></i>-->
+                <el-button type="text" @click="play_next" circle>
+                    <i  class="control_btn  control_i el-icon-caret-right" title="播放" ></i>
+                </el-button>
+
+                <div class="progress_bar_div">
+                    <p id="current_time" class="music_time" v-text="get_current"></p>
+                    <input ref="pg_bar" @input="pg_bar_input" type="range" id="progress_bar" min="0" max="100" step="0.1" value="0">
+                    <p id="duration_time" class="music_time" v-text="get_duration"></p>
+                </div>
+            </el-col>
+            <el-col :span="7">
+                <div id="volume_div">
+                    <el-button type="text" @click="play_next" circle>
+                        <i  class="right_btn  control_i el-icon-caret-right" title="播放" ></i>
+                    </el-button>
+
+                    <input ref="volume_bar" @input="volume_bar_input" type="range" id="volume_bar" min="0" max="100" step="0.1" v-model="volume">
+                </div>
+            </el-col>
+
+        </el-row>
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!--<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>-->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+
+</script>
+<script src="js/index.js"></script>
+</body>
+</html>
